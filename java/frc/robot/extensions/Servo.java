@@ -18,7 +18,7 @@ public class Servo {
     public Servo(int pin) 
     {
         pinOut = new DigitalOutput(pin);
-        pinOut.setPWMRate(12000);
+        pinOut.setPWMRate(50);
         pinOut.enablePWM(0);
     }
 
@@ -32,23 +32,54 @@ public class Servo {
         {
             angle = 180;
         }
+        
+        float anglePerc0100 = degreesToPerctange(angle);
 
-        float angleInZO = angle / 180;
-        float returnerWidth = MAX_PULSE_ANGLE - MIN_PULSE_ANGLE;
-        float resultInReturnerWidth = angleInZO * returnerWidth;
-        float result = MIN_PULSE_ANGLE + resultInReturnerWidth;
-
-        writeCycle(result / 2400);
+        lastAngle = angle;
+        setDutyCyclePerc(anglePerc0100);
     }
 
     public float getAngle() 
     {
-        return ((lastAngle * 2400 - MIN_PULSE_ANGLE) / 1856) * 180;
+        return lastAngle;
     }
 
-    protected void writeCycle(float angle) 
+    protected float degreesToPerctange(int degree) 
+    {
+        float binaryRangedPerc = degree / 180; //exceptional binary range
+        float perc0100 = binaryRangedPerc * 100;
+
+        return perc0100;
+    }
+
+    protected float convertToBinaryRange(float perc) 
+    {
+        float result = perc / 100;
+        
+        return result;
+    }
+
+    protected float convertToServoFrequencyRange(float perc) 
+    {
+        int SERVO_MIN_FREQ = 2;
+
+        float binaryRangedPerc = convertToBinaryRange(perc);
+        float servoRangedPerc010 = binaryRangedPerc * 10;
+        float servoRangedPerc212 = servoRangedPerc010 + SERVO_MIN_FREQ;
+
+        return servoRangedPerc212;
+    }
+
+    /*protected void writeCycle(float angle) 
     {
         lastAngle = angle;
         pinOut.updateDutyCycle(angle);
+    }*/
+    
+    protected void setDutyCyclePerc(float perc) 
+    {
+        float servoFreqRangedPerc = convertToServoFrequencyRange(perc);
+
+        pinOut.updateDutyCycle(servoFreqRangedPerc);
     }
 }
