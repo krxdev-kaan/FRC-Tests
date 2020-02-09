@@ -7,6 +7,10 @@
 
 package frc.robot;
 
+import org.opencv.core.*;
+import org.opencv.imgproc.*;
+
+import edu.wpi.cscore.*;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.Joystick;
@@ -19,28 +23,16 @@ import frc.robot.extensions.Servo;
 
 public class Robot extends TimedRobot {
 
-  //#region SMART DASHBOARD VARIABLES/DECLARATIONS
-  //
-  //
-  //
-  //
   private static final String kDefaultAuto = "Default";
   private static final String kCustomAuto = "CAuto";
   private String m_kAutoSelected;
   
+  
+  
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
-  //
-  //
-  //
-  //
-  //
-  //#endregion
-
-  //#region ROBORIO DECLARATIONS
-  //
-  //
-  //
-  //
+  
+  
+  
   private static VictorSP frontLeftMotor;
   private static VictorSP frontRightMotor;
   private static VictorSP rearLeftMotor;
@@ -51,12 +43,8 @@ public class Robot extends TimedRobot {
   private static Joystick joystick;
 
   private static DifferentialDrive driver;
-  //
-  //
-  //
-  //
-  //
-  //#endregion
+
+  private static Thread visionProcessingThread;
 
   @Override
   public void robotInit() 
@@ -74,7 +62,41 @@ public class Robot extends TimedRobot {
 
     driver = new DifferentialDrive(frontLeftMotor, frontRightMotor);
 
-    UsbCamera cam = CameraServer.getInstance().startAutomaticCapture(0);
+    visionProcessingThread = new Thread(() -> {
+      UsbCamera cam = CameraServer.getInstance().startAutomaticCapture(0);
+      cam.setFPS(30);
+      cam.setResolution(640, 480);
+
+      CvSink cvSink = CameraServer.getInstance().getVideo();
+      CvSource outputStream = CameraServer.getInstance().putVideo("Rectangle", 640, 480);
+
+      Mat mat = new Mat();
+
+      while(true) 
+      {
+        if(visionProcessingThread.isInterrupted()) break; // Check if this thread is ended
+
+        if (cvSink.grabFrame(mat) == 0) 
+        {
+					outputStream.notifyError(cvSink.getError()); // Notify if we got an error
+          continue;
+        }
+        
+        Imgproc.line(mat, 
+              new Point(315, 240), 
+              new Point(325, 240), 
+              new Scalar(255,0,0), 
+              5); // Simply draw the crosshairs horizontal line
+
+        Imgproc.line(mat, 
+              new Point(320, 235), 
+              new Point(320, 245), 
+              new Scalar(255,0,0), 
+              5); // Simply draw the crosshairs vertical line
+
+				outputStream.putFrame(mat); // Send the processed frame back to the stream
+      }
+    });
   }
   
   @Override
@@ -111,39 +133,23 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() 
   {
     double speed = (joystick.getRawAxis(3) + 1) / 2;
-    /*switch (m_kAutoSelected) 
-    {
-      case kCustomAuto:
-        speed = 0.7;
-        break;
-
-      case kDefaultAuto:
-        speed = 0.5;
-        break;
-
-      default:
-        speed = 1;
-        break;
-    }*/
-    // MOVING (X) COORDINATE MUST BE REVERSED
     double mVel = -joystick.getRawAxis(1) * speed;
     double rVel = joystick.getRawAxis(4) * 0.60;
 
-    if (joystick.getRawButton(6)) 
+    driver.arcadeDrive(mVel, rVel);
+
+    if (joystick.getPOV() == 90) 
     {
       servo.setAngle(0);
     }
-    if(joystick.getRawButton(5)) 
+    
+    if(joystick.getPOV() == 270) 
     {
       servo.setAngle(180);
     }
-    SmartDashboard.putNumber("JOYSTICK X AXIS REVERSED: ", mVel);
-    SmartDashboard.putNumber("JOYSTICK Y AXIS REVERSED: ", speed);
-    SmartDashboard.putNumber("JOYSTICK X AXIS: ", -mVel);
-    SmartDashboard.putNumber("JOYSTICK Y AXIS: ", rVel);
 
-    driver.arcadeDrive(mVel, rVel);
-
+    SmartDashboard.putNumber("Moving Speed: ", mVel);
+    SmartDashboard.putNumber("Rotation Speed: ", speed);
     SmartDashboard.putNumber("FRONT RIGHT MOTOR: ", frontRightMotor.getSpeed());
     SmartDashboard.putNumber("FRONT LEFT MOTOR: ", frontLeftMotor.getSpeed());
   }
