@@ -20,6 +20,8 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.extensions.Servo;
+import frc.robot.extensions.*;
+import frc.robot.subsystems.*;
 
 public class Robot extends TimedRobot {
 
@@ -30,21 +32,26 @@ public class Robot extends TimedRobot {
   
   
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
+
+
+
+  private static DriveSystem s_DriveSystem;
   
-  
-  
-  private static VictorSP frontLeftMotor;
-  private static VictorSP frontRightMotor;
-  private static VictorSP rearLeftMotor;
-  private static VictorSP rearRightMotor;
 
-  private static Servo servo = new Servo(0);
 
-  private static Joystick joystick;
-
-  private static DifferentialDrive driver;
-
+  private static Thread servoThread = new Thread(new ServoThread());
+  private static Thread servoThread2 = new Thread(new ServoSecThread());
   private static Thread visionProcessingThread;
+
+
+
+  public static Servo servo = new Servo(0);
+
+
+
+  public static Joystick joystick;
+
+
 
   @Override
   public void robotInit() 
@@ -55,12 +62,7 @@ public class Robot extends TimedRobot {
 
     joystick = new Joystick(0);
 
-    frontRightMotor = new VictorSP(0);
-    frontLeftMotor = new VictorSP(9);
-    rearLeftMotor = new VictorSP(2);
-    rearRightMotor = new VictorSP(3);
-
-    driver = new DifferentialDrive(frontLeftMotor, frontRightMotor);
+    s_DriveSystem = new DriveSystem();
 
     visionProcessingThread = new Thread(() -> {
       UsbCamera cam = CameraServer.getInstance().startAutomaticCapture(0);
@@ -97,6 +99,8 @@ public class Robot extends TimedRobot {
 				outputStream.putFrame(mat); // Send the processed frame back to the stream
       }
     });
+
+    visionProcessingThread.start();
   }
   
   @Override
@@ -130,28 +134,28 @@ public class Robot extends TimedRobot {
   }
 
   @Override
+  public void teleopInit() 
+  {
+    servoThread.start();  
+    servoThread2.start();
+  }
+
+  @Override
   public void teleopPeriodic() 
   {
+    double rotationSpeed = 0.60;
     double speed = (joystick.getRawAxis(3) + 1) / 2;
-    double mVel = -joystick.getRawAxis(1) * speed;
-    double rVel = joystick.getRawAxis(4) * 0.60;
+    double mVel = -joystick.getRawAxis(1);
+    double rVel = joystick.getRawAxis(4);
 
-    driver.arcadeDrive(mVel, rVel);
+    s_DriveSystem.arcadeDrive(mVel, rVel, speed, rotationSpeed);
+  }
 
-    if (joystick.getPOV() == 90) 
-    {
-      servo.setAngle(0);
-    }
-    
-    if(joystick.getPOV() == 270) 
-    {
-      servo.setAngle(180);
-    }
-
-    SmartDashboard.putNumber("Moving Speed: ", mVel);
-    SmartDashboard.putNumber("Rotation Speed: ", speed);
-    SmartDashboard.putNumber("FRONT RIGHT MOTOR: ", frontRightMotor.getSpeed());
-    SmartDashboard.putNumber("FRONT LEFT MOTOR: ", frontLeftMotor.getSpeed());
+  @Override
+  public void disabledInit() 
+  {
+    servoThread.interrupt();
+    servoThread2.interrupt(); 
   }
 
   @Override

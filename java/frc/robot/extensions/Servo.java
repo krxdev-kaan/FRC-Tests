@@ -109,30 +109,22 @@ public class Servo {
 
     public void steerRight(int speed) 
     {
+        shouldStopMotor = false;
+
         float baseSeconds = 10;
         float processedSeconds = baseSeconds / speed;
         float processedMillisF = processedSeconds;
         int processedMillis = (int)processedMillisF;
 
-        for (int i = (int)getAngle(); i <= 180; i++) 
+        for (int i = (int)getAngle(); i >= 0; i--) 
         {
-            if (i < 0) 
-            {
-                i = 0;
-            } 
-            else if (i > 180) 
-            {
-                i = 180;
-            }
-
             if (shouldStopMotor) 
             {
                 shouldStopMotor = false;
                 break;
             }
 
-            float anglePerc0100 = degreesToPerctange(i);
-            setDutyCyclePerc(anglePerc0100);
+            setAngle(i);
 
             long a = (int)processedMillis;
 
@@ -145,31 +137,23 @@ public class Servo {
 
     public void steerLeft(int speed) 
     {
+        shouldStopMotor = false;
+
         float baseSeconds = 10;
         float processedSeconds = baseSeconds / speed;
         float processedMillisF = processedSeconds;
         int processedMillis = (int)processedMillisF;
 
-        for (int i = (int)getAngle(); i >= 0; i--) 
+        for (int i = (int)getAngle(); i <= 180; i++)
         {
-            if (i < 0) 
-            {
-                i = 0;
-            } 
-            else if (i > 180) 
-            {
-                i = 180;
-            }
-
             if (shouldStopMotor) 
             {
                 shouldStopMotor = false;
                 break;
             }
 
-            float anglePerc0100 = degreesToPerctange(i);
-            setDutyCyclePerc(anglePerc0100);
-
+            setAngle(i);
+            
             long a = (int)processedMillis;
 
             try 
@@ -182,6 +166,12 @@ public class Servo {
     public void stopMotor() 
     {
         shouldStopMotor = true;
+    }
+    
+    protected void disableCycles() 
+    {
+        //pinOut.disablePWM();
+        pinOut.updateDutyCycle(0.000);
     }
 
     protected float degreesToPerctange(float degree) 
