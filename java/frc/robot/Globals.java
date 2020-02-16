@@ -13,5 +13,12 @@ public class Globals
 
     public static int LIFT_MOTOR_CONTROLLER_PWM_PIN = -1; // Change when set !
 
+    
+
+    public static double SHOOTER_SPEED_RNG_1_U1 = 1; // Change if needed !
+    public static double LIFTER_SPEED_RNG_1_U1 = 1; // Change if needed !
+    public static double CONVEYOR_SPEED_RNG_1_U1 = 0.5; // Change if needed !
+    public static double INTAKE_SPEED_RNG_1_U1 = 1; // Change if needed !
+
     // IMPLEMENT MUCH MORE VARIABLES SO THE PROGRAM CAN BECOME EVEN MORE CUSTOMIZABLE
 }

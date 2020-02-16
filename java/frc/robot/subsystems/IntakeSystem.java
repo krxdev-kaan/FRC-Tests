@@ -9,23 +9,41 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import frc.robot.Globals;
 
 public class IntakeSystem extends Subsystem {
-	// Talons
-	VictorSP intakeVictor = null;
-	VictorSP conveyorVictor = null;
+	  // Victors
+	  VictorSP intakeVictor = null;
+	  VictorSP conveyorVictor = null;
 
     public IntakeSystem() 
     {
-		// Victors
-		intakeVictor = new VictorSP(Globals.INTAKE_MOTOR_CONTROLLER_PWM_PIN);
-		conveyorVictor = new VictorSP(Globals.CONVEYOR_MOTOR_CONTROLLER_PWN_PIN);
+		  // Victors
+		  intakeVictor = new VictorSP(Globals.INTAKE_MOTOR_CONTROLLER_PWM_PIN);
+		  conveyorVictor = new VictorSP(Globals.CONVEYOR_MOTOR_CONTROLLER_PWN_PIN);
     }
     
-    // IMPLEMENT FUNCTIONS AFTER STRATEGY IS DECLARED
+    public void startIntakeMotor() 
+    {
+      intakeVictor.set(Globals.INTAKE_SPEED_RNG_1_U1);
+    }
 
-	@Override
+    public void stopIntakeMotor() 
+    {
+      intakeVictor.set(0.0);
+    }
+
+    public void startConveyorMotor() 
+    {
+      conveyorVictor.set(Globals.CONVEYOR_SPEED_RNG_1_U1);
+    }
+
+    public void stopConveyorMotor() 
+    {
+      conveyorVictor.set(0.0);
+    }
+
+	  @Override
     public void initDefaultCommand() 
     {
-        // setDefaultCommand() when implemented
-        // or we can just simply use the subsystem ? (maybe?)
-	}
+      // setDefaultCommand() when implemented
+      // or we can just simply use the subsystem ? (maybe?)
+	  }
 }

@@ -9,21 +9,29 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import frc.robot.Globals;
 
 public class ShooterSystem extends Subsystem {
-	// Talons
-	VictorSP shooterVictor = null;
+	  // Victors
+	  VictorSP shooterVictor = null;
 
     public ShooterSystem() 
     {
-		// Victors
-		shooterVictor = new VictorSP(Globals.SHOOTER_MOTOR_CONTROLLER_PWM_PIN);
+		  // Victors
+		  shooterVictor = new VictorSP(Globals.SHOOTER_MOTOR_CONTROLLER_PWM_PIN);
     }
     
-    // IMPLEMENT FUNCTIONS AFTER STRATEGY IS DISCUSSED
+    public void fireUpShooter() 
+    {
+      shooterVictor.set(Globals.SHOOTER_SPEED_RNG_1_U1);
+    }
 
-	@Override
+    public void stopShooter() 
+    {
+      shooterVictor.set(0.0);
+    }
+
+	  @Override
     public void initDefaultCommand() 
     {
-        // setDefaultCommand() when implemented
-        // or we can just simply use the subsystem ? (maybe?)
-	}
+      // setDefaultCommand() when implemented
+      // or we can just simply use the subsystem ? (maybe?)
+	  }
 }
