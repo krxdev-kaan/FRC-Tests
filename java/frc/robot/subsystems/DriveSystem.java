@@ -10,10 +10,10 @@ import frc.robot.Globals;
 
 public class DriveSystem extends Subsystem {
 	// Talons
-	VictorSP leftVictor = null;
-	VictorSP rightVictor = null;
+	public VictorSP leftVictor = null;
+	public VictorSP rightVictor = null;
 
-	DifferentialDrive differentialDrive = null;
+	public DifferentialDrive differentialDrive = null;
 
     public DriveSystem() 
     {
