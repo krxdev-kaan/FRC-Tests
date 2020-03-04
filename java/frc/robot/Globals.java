@@ -7,11 +7,11 @@ public class Globals
     public static int LEFT_WHEELS_CONTROLLER_PWM_PIN = 8;
     public static int RIGHT_WHEELS_CONTROLLER_PWM_PIN = 9;
 
-    public static int INTAKE_MOTOR_CONTROLLER_PWM_PIN = -1; // Change when set !
+    public static int INTAKE_MOTOR_CONTROLLER_PWM_PIN = 4; // Change when set !
     public static int SHOOTER_MOTOR_CONTROLLER_PWM_PIN = -1; // Change when set !
-    public static int CONVEYOR_MOTOR_CONTROLLER_PWN_PIN = -1; // Change when set !
+    public static int CONVEYOR_MOTOR_CONTROLLER_PWN_PIN = 5; // Change when set !
 
-    public static int LIFT_MOTOR_CONTROLLER_PWM_PIN = -1; // Change when set !
+    public static int LIFT_MOTOR_CONTROLLER_PWM_PIN = 3; // Change when set !
 
     
 

@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import frc.robot.Globals;
 
 public class DriveSystem extends Subsystem {
-	// Talons
+	// Victors
 	public VictorSP leftVictor = null;
 	public VictorSP rightVictor = null;
 

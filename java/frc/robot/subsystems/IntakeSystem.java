@@ -35,6 +35,16 @@ public class IntakeSystem extends Subsystem {
       conveyorVictor.set(Globals.CONVEYOR_SPEED_RNG_1_U1);
     }
 
+    public void reverseStartIntakeMotor() 
+    {
+      intakeVictor.set(-Globals.INTAKE_SPEED_RNG_1_U1);
+    }
+
+    public void reverseStartConveyorMotor() 
+    {
+      conveyorVictor.set(-Globals.CONVEYOR_SPEED_RNG_1_U1);
+    }
+
     public void stopConveyorMotor() 
     {
       conveyorVictor.set(0.0);
@@ -45,5 +55,6 @@ public class IntakeSystem extends Subsystem {
     {
       // setDefaultCommand() when implemented
       // or we can just simply use the subsystem ? (maybe?)
+      
 	  }
 }

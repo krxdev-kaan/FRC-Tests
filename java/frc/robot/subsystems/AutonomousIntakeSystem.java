@@ -60,9 +60,9 @@ public class AutonomousIntakeSystem extends Subsystem {
                 }
             }*/
             int xValue = (ccc.getBlockCache().get(indexToManipulate).getWidth() / 2) + ccc.getBlockCache().get(indexToManipulate).getX();
-            System.out.println("Annen Dedi Ki: " + xValue);
+            System.out.println("Debug Value: " + xValue);
 
-            if (xValue < ((width / 2) - 10)) 
+            if (xValue < ((width / 2) - 10) ) //  
             {
                 double turnModifier = (((width / 2) - 10) - xValue) / ((width / 2) - 10) / 10;
                 Robot.s_DriveSystem.leftVictor.set(-Globals.AUTONOMOUS_INTAKE_LEAN_SPEED);

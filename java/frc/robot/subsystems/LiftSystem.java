@@ -33,6 +33,11 @@ public class LiftSystem extends Subsystem {
       liftVictor.set(0.0);
     }
 
+    public void setCustomSpeed(double speed) 
+    {
+      liftVictor.set(speed);
+    }
+
     @Override
     public void initDefaultCommand() 
     {

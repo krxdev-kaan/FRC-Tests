@@ -7,6 +7,11 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+/** 
+ * THIS SYSTEM WILL NEVER BE USED DURING THE MATCH
+ * ONLY FOR TESTING
+ * CAN BE IGNORED
+*/
 public class Servo {
     protected int MIN_PULSE_WIDTH = 544;
     protected int MAX_PULSE_WIDTH = 2400;

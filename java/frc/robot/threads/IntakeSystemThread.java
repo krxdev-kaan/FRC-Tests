@@ -8,18 +8,25 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class IntakeSystemThread implements Runnable
+public class IntakeSystemThread
 {
     public void run() 
     {
         if(Robot.joystick.getRawButton(1)) // "A"
         {
             Robot.s_IntakeSystem.startIntakeMotor();
+            Robot.s_IntakeSystem.startConveyorMotor();
         } 
-        
-        if(Robot.joystick.getRawButton(2)) // "B"
+        else
         {
             Robot.s_IntakeSystem.stopIntakeMotor();
+            Robot.s_IntakeSystem.stopConveyorMotor();
+        }
+
+        if(Robot.joystick.getRawButton(2)) // "B"
+        {
+            Robot.s_IntakeSystem.reverseStartConveyorMotor();
+            Robot.s_IntakeSystem.reverseStartIntakeMotor();
         }
 
         //IMPLEMENT INFRA RED SCANNING SYSTEM

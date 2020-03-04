@@ -8,11 +8,16 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+/** 
+ * THIS THREAD WILL NEVER BE USED DURING THE MATCH
+ * ONLY FOR TESTING
+ * CAN BE IGNORED
+*/
 public class ServoSecThread implements Runnable
 {
     public void run() 
     {
-        while (true) 
+        while (true)
         {
             if (Robot.joystick.getPOV() == 90) 
             {

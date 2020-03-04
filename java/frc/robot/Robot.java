@@ -38,8 +38,9 @@ public class Robot extends TimedRobot {
   private static Thread servoThread = new Thread(new ServoThread()); // FOR TESTING PURPOSES ONLY - SHOULD BE IGNORED
   private static Thread servoThread2 = new Thread(new ServoSecThread()); // FOR TESTING PURPOSES ONLY - SHOULD BE IGNORED
   public static Thread visionProcessingThread = new Thread(new TeleoperationShootingSystemThread());
-  private static Thread driveSystemThread = new Thread(new DriveSystemThread());
-  private static Thread intakeSystemThread = new Thread(new IntakeSystemThread());
+  private static DriveSystemThread driveSystemThread = new DriveSystemThread();
+  private static IntakeSystemThread intakeSystemThread = new IntakeSystemThread();
+  private static LiftSystemThread liftSystemThread = new LiftSystemThread();
 
 
   // FOR TESTING ---------------------------
@@ -48,6 +49,7 @@ public class Robot extends TimedRobot {
 
 
   public static Joystick joystick;
+  public static LEDController led = new LEDController(0);
 
 
 
@@ -57,6 +59,11 @@ public class Robot extends TimedRobot {
     joystick = new Joystick(0);
 
     s_DriveSystem = new DriveSystem();
+    s_IntakeSystem = new IntakeSystem();
+    //s_AutonomousIntakeSystem = new AutonomousIntakeSystem();
+    //s_AutonomousShootingSystem = new AutonomousShootingSystem();
+    s_LiftSystem = new LiftSystem();
+    //s_ShooterSystem = new ShooterSystem();
   }
   
   @Override
@@ -86,14 +93,38 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() 
   {
-      driveSystemThread.run();
-      intakeSystemThread.run();
+    /*double rotationSpeed = 0.60;
+    double speed = (joystick.getRawAxis(3) + 1) / 2;
+    double mVel = -joystick.getRawAxis(1);
+    double rVel = joystick.getRawAxis(4);
 
-      while(!driveSystemThread.isInterrupted() && 
-            !intakeSystemThread.isInterrupted()) 
-      {
 
-      }
+    s_DriveSystem.arcadeDrive(mVel, rVel, speed, rotationSpeed);*/
+
+
+    driveSystemThread.run();
+    intakeSystemThread.run();
+    liftSystemThread.run();
+    
+    if(joystick.getRawButton(3)) 
+    {
+      led.on();
+    }
+    if(joystick.getRawButton(4)) 
+    {
+      led.off();
+    }
+
+
+    /*if(joystick.getRawButton(1)) // "A"
+    {
+      s_IntakeSystem.startIntakeMotor();
+    } 
+        
+    if(joystick.getRawButton(2)) // "B"
+    {
+      s_IntakeSystem.stopIntakeMotor();
+    }*/
   }
 
   @Override
