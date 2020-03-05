@@ -15,18 +15,19 @@ public class IntakeSystemThread
         if(Robot.joystick.getRawButton(1)) // "A"
         {
             Robot.s_IntakeSystem.startIntakeMotor();
-            Robot.s_IntakeSystem.startConveyorMotor();
         } 
         else
         {
             Robot.s_IntakeSystem.stopIntakeMotor();
-            Robot.s_IntakeSystem.stopConveyorMotor();
         }
 
         if(Robot.joystick.getRawButton(2)) // "B"
         {
-            Robot.s_IntakeSystem.reverseStartConveyorMotor();
-            Robot.s_IntakeSystem.reverseStartIntakeMotor();
+            Robot.s_IntakeSystem.startConveyorMotor();
+        }
+        else 
+        {
+            Robot.s_IntakeSystem.stopConveyorMotor();
         }
 
         //IMPLEMENT INFRA RED SCANNING SYSTEM
